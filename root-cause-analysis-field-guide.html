@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A practical Analytical Field Guide to root cause analysis, causal learning, systems methods, corrective action and verified improvement.">
+  <title>Root Cause Analysis — A Field Guide to Solving the Right Problem</title>
+  <style>
+    :root {
+      --ink:#17201d; --paper:#f4f0e7; --panel:#fffdf7; --muted:#5d6863;
+      --green:#174f3f; --mint:#c9e2d5; --amber:#e6a33c; --coral:#cf6046;
+      --line:#cfc9bb; --soft:#e9e2d6; --shadow:0 20px 55px rgba(23,32,29,.11);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:var(--paper);font:17px/1.65 Georgia,'Times New Roman',serif}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.28;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E")}
+    a{color:var(--green);text-underline-offset:3px}
+    .shell{width:min(1180px,calc(100% - 32px));margin:auto;position:relative}
+    header{min-height:92vh;display:grid;align-items:center;padding:80px 0 56px;border-bottom:1px solid var(--line);overflow:hidden}
+    .eyebrow,.label,nav,button,th,.mini-label{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase;letter-spacing:.09em}
+    .eyebrow{color:var(--coral);font-size:.78rem;font-weight:700}
+    h1{font-size:clamp(3.4rem,9vw,8.5rem);line-height:.86;letter-spacing:-.075em;max-width:1000px;margin:20px 0 34px;font-weight:500}
+    h1 em{color:var(--green);font-weight:400}
+    .dek{max-width:780px;font-size:clamp(1.16rem,2.1vw,1.55rem);line-height:1.45}
+    .hero-note{margin-top:38px;max-width:900px;border-left:5px solid var(--amber);padding:12px 0 12px 22px;color:var(--muted)}
+    .hero-mark{position:absolute;right:-70px;top:0;font:20rem/1 Georgia,serif;color:var(--mint);z-index:-1;transform:rotate(10deg)}
+    nav{position:sticky;top:0;z-index:10;background:rgba(244,240,231,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    nav .shell{display:flex;gap:20px;overflow-x:auto;padding-block:13px;scrollbar-width:none}
+    nav a{white-space:nowrap;text-decoration:none;font-size:.72rem;font-weight:700}
+    main section{padding:94px 0;border-bottom:1px solid var(--line)}
+    .section-head{display:grid;grid-template-columns:180px 1fr;gap:28px;margin-bottom:48px}
+    .section-no{font:700 .8rem/1 ui-monospace,monospace;color:var(--coral)}
+    h2{font-size:clamp(2.2rem,5vw,4.7rem);line-height:1;letter-spacing:-.045em;margin:0;font-weight:500}
+    h3{font-size:1.45rem;line-height:1.25;margin:0 0 12px}
+    h4{font-size:1.05rem;line-height:1.3;margin:0 0 8px}
+    p{margin:0 0 1em}
+    .lead{font-size:1.27rem;max-width:820px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:1/-1}
+    .card{background:var(--panel);border:1px solid var(--line);padding:26px;box-shadow:0 8px 0 rgba(23,79,63,.05)}
+    .card p:last-child,.card ul:last-child{margin-bottom:0}
+    .label,.mini-label{color:var(--coral);font-size:.68rem;font-weight:700}
+    .definition-grid{grid-auto-rows:1fr}
+    .definition-grid .card{height:100%}
+    .term{color:var(--green);font-weight:700}
+    .quote{background:var(--green);color:#f8f3e9;padding:48px;margin:64px 0 0 auto;max-width:930px;font-size:clamp(1.45rem,3vw,2.45rem);line-height:1.25;box-shadow:var(--shadow)}
+    .quote small{display:block;margin-top:22px;font:.7rem/1.5 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--mint)}
+    .warning{border-left:6px solid var(--coral);background:#f6e2d9;padding:26px;margin:34px 0}
+    .annotation{border-left:5px solid var(--amber);background:#eee7d8;padding:22px 26px;margin:28px 0}
+    .cycle{counter-reset:step;display:grid;gap:12px}
+    .step{counter-increment:step;display:grid;grid-template-columns:70px 220px 1fr;gap:22px;align-items:start;padding:24px;border-top:1px solid var(--line);background:linear-gradient(90deg,rgba(255,253,247,.9),transparent)}
+    .step::before{content:counter(step,decimal-leading-zero);font:700 1.8rem/1 ui-monospace,monospace;color:var(--coral)}
+    .step h3{font-size:1.15rem}
+    .step p{margin:0}
+    .step strong{color:var(--green)}
+    .case-section{background:#ece5d9}
+    .case-banner{background:var(--green);color:#fffdf7;padding:36px;border:1px solid var(--green);margin-bottom:26px}
+    .case-banner .label{color:var(--mint)}
+    .case-banner h3{font-size:clamp(1.6rem,3.2vw,2.7rem);max-width:950px;margin:8px 0 12px}
+    .case-banner p{max-width:930px;margin:0;color:#e3ede8}
+    .case-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0 34px}
+    .case-facts>div{background:var(--panel);border:1px solid var(--line);padding:22px}
+    .case-facts strong{display:block;color:var(--green);font-size:1.55rem;line-height:1.1;margin:6px 0}
+    .evidence-table{width:100%;border-collapse:collapse;background:var(--panel);font-size:.95rem}
+    .scroll-hint{display:none;font:700 .7rem/1.4 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.07em;color:var(--coral);margin:10px 0}
+    th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:16px}
+    th{font-size:.67rem;color:var(--green)}
+    .causal-map{margin:34px 0;background:var(--panel);border:1px solid var(--line);padding:26px;overflow-x:auto}
+    .causal-map svg{display:block;width:100%;min-width:920px;height:auto}
+    .case-findings{counter-reset:finding;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .finding{counter-increment:finding;background:var(--panel);border:1px solid var(--line);padding:24px}
+    .finding::before{content:"Finding " counter(finding,decimal-leading-zero);display:block;color:var(--coral);font:700 .68rem/1 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+    .finding h3{font-size:1.25rem}
+    .confidence{display:inline-block;margin-top:8px;padding:5px 8px;border:1px solid var(--green);color:var(--green);font:700 .64rem/1 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em}
+    .action-plan{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;margin-top:22px}
+    .action-plan>div{background:var(--panel);border:1px solid var(--line);padding:26px}
+    .action-plan ul{padding-left:1.1em;margin-bottom:0}
+    .decision{padding:38px;background:#e5ddd0;border:1px solid #c4baa9;margin-bottom:26px}
+    .method-ladder{display:grid;gap:12px}
+    .method-row{display:grid;grid-template-columns:210px 1fr 1fr;gap:24px;padding:24px;background:var(--panel);border-top:1px solid var(--line)}
+    .method-row h3{font-size:1.15rem;color:var(--green)}
+    .method-row p{margin:0}
+    .method-row .mini-label{display:block;margin-bottom:7px}
+    .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .tool-card{background:var(--panel);border:1px solid var(--line);padding:28px}
+    .tool-card h3{color:var(--green)}
+    .tool-card dl{margin:18px 0 0}
+    .tool-card dt{font:700 .67rem/1.3 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-top:14px}
+    .tool-card dd{margin:4px 0 0}
+    .strength{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .strength>div{padding:24px;border-top:8px solid;background:var(--panel)}
+    .strength .weak{border-color:var(--coral)}.strength .mid{border-color:var(--amber)}.strength .strong{border-color:var(--green)}
+    .modern{background:var(--ink);color:#f7f1e7}
+    .modern h2{color:#fffaf0}.modern .section-no,.modern>.shell>.section-head .label{color:#ff987f}.modern .lead{color:#ced9d4}
+    .systems-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .system-card{background:var(--panel);color:var(--ink);border:1px solid #675f57;padding:26px}
+    .system-card h3{color:var(--ink)}
+    .system-card .label{color:var(--coral)}
+    .system-card p:last-child{margin-bottom:0}
+    .modern .warning{color:var(--ink)}
+    .pathway{margin-top:34px;padding:28px;border:1px solid #56635e;background:#202b27}
+    .pathway h3{color:#fffaf0}
+    .pathway ol{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;list-style:none;padding:0;margin:22px 0 0;counter-reset:path}
+    .pathway li{counter-increment:path;position:relative;background:#fffdf7;color:var(--ink);padding:18px 14px;min-height:125px}
+    .pathway li::before{content:counter(path,decimal-leading-zero);display:block;color:var(--coral);font:700 .7rem/1 ui-monospace,monospace;margin-bottom:10px}
+    .pathway li strong{display:block;line-height:1.2;margin-bottom:6px}
+    .canvas{background:var(--panel);border:1px solid var(--line);padding:35px}
+    .canvas ol{counter-reset:prompt;list-style:none;padding:0;margin:0}
+    .canvas li{counter-increment:prompt;display:grid;grid-template-columns:42px 1fr;gap:12px;padding:13px 0;border-bottom:1px dotted var(--line)}
+    .canvas li::before{content:counter(prompt);color:var(--coral);font:700 1rem/1.7 ui-monospace,monospace}
+    .check-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px}
+    .check-grid>div{background:var(--panel);border:1px solid var(--line);padding:26px}
+    .check-grid ul{padding-left:1.1em;margin-bottom:0}
+    .sources li{margin-bottom:14px}
+    footer{padding:60px 0 90px;color:var(--muted)}
+    .footer-grid{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end}
+    .tidyweb-mark{display:inline-flex;align-items:center;gap:11px;color:var(--muted);font:700 .62rem/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+    .tidyweb-mark:hover{color:var(--green)}
+    .tidyweb-mark img{width:44px;height:44px;object-fit:contain}
+    .top{position:fixed;right:18px;bottom:18px;width:44px;height:44px;border-radius:50%;border:1px solid var(--green);background:var(--paper);color:var(--green);cursor:pointer;display:none}
+    @media(max-width:900px){
+      .span-3,.span-4,.span-5,.span-6,.span-7,.span-8{grid-column:1/-1}
+      .section-head{grid-template-columns:1fr;gap:12px}
+      .step{grid-template-columns:48px 1fr}.step p{grid-column:2}
+      .case-facts,.case-findings,.action-plan,.tool-grid,.strength,.systems-grid,.check-grid,.footer-grid{grid-template-columns:1fr}
+      .method-row{grid-template-columns:1fr;gap:10px}
+      .pathway ol{grid-template-columns:1fr 1fr}
+      .evidence-wrap{overflow-x:auto}.evidence-table{min-width:760px}
+      .scroll-hint{display:block}
+      header{min-height:auto}.hero-mark{display:none}
+    }
+    @media(max-width:520px){
+      main section{padding:70px 0}.card,.tool-card,.system-card{padding:22px}.quote{padding:32px}.case-banner{padding:28px}
+      .pathway ol{grid-template-columns:1fr}.canvas{padding:24px}
+    }
+    @media print{
+      nav,.top{display:none!important}body{background:#fff;font-size:11pt}header{min-height:0;padding:30px 0}
+      main section{padding:35px 0;break-inside:avoid}.card,.quote,.canvas{box-shadow:none}a{color:inherit}.causal-map{overflow:visible}
+    }
+  </style>
+<link rel="stylesheet" href="collection-nav.css">
+</head>
+<body>
+  <header id="top">
+    <div class="shell">
+      <div class="hero-mark">?</div>
+      <div class="eyebrow">Analytical Field Guide · evidence to verified learning</div>
+      <h1>Root Cause<br><em>Analysis</em></h1>
+      <p class="dek">How to move from a messy symptom to defensible causal claims, proportionate action and evidence that the change actually worked.</p>
+      <p class="hero-note"><strong>The governing question:</strong> what combination of conditions made this outcome possible, how confident are we, and what change will reduce recurrence without creating a different problem?</p>
+    </div>
+  </header>
+
+  <nav class="collection-bar" aria-label="Analytical Field Guides collection"><div class="shell"><span class="collection-name">Analytical Field Guides</span><a href="analytical-field-guides.html">Overview</a><a href="root-cause-analysis-field-guide.html" aria-current="page">Root Cause Analysis</a><a href="effective-mind-mapping-field-guide.html">Mind Mapping</a><a href="strategic-planning-with-swot-field-guide.html">SWOT Analysis</a></div></nav>
+  <nav aria-label="Document sections"><div class="shell">
+    <a href="#purpose">Purpose</a><a href="#mindset">Causal thinking</a><a href="#process">Process</a><a href="#worked-case">Worked case</a><a href="#choose">Choose a method</a><a href="#toolkit">Core toolkit</a><a href="#actions">Actions</a><a href="#beyond">Beyond RCA</a><a href="#canvas">Canvas</a><a href="#sources">Sources</a>
+  </div></nav>
+
+  <main>
+    <section id="purpose"><div class="shell">
+      <div class="section-head"><div class="section-no">01 / PURPOSE</div><div><h2>Investigate the mechanism—not merely the visible failure</h2><p class="lead">Root cause analysis is a structured way to learn from an unwanted outcome. It reconstructs what happened, tests why it happened, and converts the strongest supported explanations into changes that can be checked in practice.</p></div></div>
+      <div class="grid definition-grid">
+        <article class="card span-3"><span class="label">What you notice</span><h3>Symptom</h3><p>The place where the problem became visible: a missed appointment, defective component, failed deployment or sudden fall in retention.</p></article>
+        <article class="card span-3"><span class="label">What happened first</span><h3>Trigger</h3><p>The event that starts the path to the outcome. A trigger matters, but it may cause harm only when other conditions are present.</p></article>
+        <article class="card span-3"><span class="label">What helped produce it</span><h3>Causal factor</h3><p>An evidence-supported condition that changed the probability, severity, detection or recovery of the outcome.</p></article>
+        <article class="card span-3"><span class="label">What changes next</span><h3>Corrective action</h3><p>A controlled change linked to a causal mechanism, with an owner, measures, guardrails and a review date.</p></article>
+      </div>
+      <div class="annotation"><strong>“Root cause” is convenient language, not a promise that every problem has one deepest cause.</strong> In simple failures, a short causal chain may be sufficient. In complex services and sociotechnical systems, the honest result is often a network of interacting conditions.</div>
+      <div class="grid">
+        <article class="card span-4"><span class="label">Restore</span><h3>Incident response</h3><p>Stabilise first. Protect people, service, data and evidence. A workaround can be correct now even though it does not explain the event.</p></article>
+        <article class="card span-4"><span class="label">Understand</span><h3>Diagnosis and RCA</h3><p>Reconstruct the event, distinguish trigger from mechanism, test rival explanations and identify where the system can be changed.</p></article>
+        <article class="card span-4"><span class="label">Improve</span><h3>Continuous improvement</h3><p>Use PDSA, A3, Lean or DMAIC when the main job is closing a measured performance gap rather than explaining one discrete incident.</p></article>
+        <article class="card span-4"><span class="label">Create</span><h3>Design and discovery</h3><p>Use research, prototyping and experiments when the problem is ambiguous and a new product, service or experience is needed.</p></article>
+        <article class="card span-4"><span class="label">Decide</span><h3>Decision analysis</h3><p>Compare options under uncertainty using explicit criteria, scenarios, sensitivity analysis and the value of additional information.</p></article>
+        <article class="card span-4"><span class="label">Prevent</span><h3>Prospective risk analysis</h3><p>Use FMEA, bow-tie, HAZOP or STPA to examine possible future failure paths. These are forward-looking methods, not retrospective RCA.</p></article>
+      </div>
+      <div class="quote">A symptom is where the problem became visible. It is not necessarily where the problem began.<small>Working principle for every investigation</small></div>
+    </div></section>
+
+    <section id="mindset"><div class="shell">
+      <div class="section-head"><div class="section-no">02 / CAUSAL THINKING</div><div><h2>A plausible story is not yet an explanation</h2><p class="lead">Good RCA makes uncertainty visible. Evidence must be able to strengthen, weaken or overturn the team’s first story—even when that story came from an experienced person.</p></div></div>
+      <div class="grid">
+        <article class="card span-6"><span class="label">Replace this</span><h3>“Who caused it?”</h3><p>Human error is normally a starting clue. Ask what information, workload, interface, incentives, constraints, training and trade-offs shaped the action at the time.</p></article>
+        <article class="card span-6"><span class="label">With this</span><h3>“How did the system permit it?”</h3><p>Study controls, feedback, dependencies and recovery paths. Ask why the action made sense locally and why another part of the system did not detect or absorb it.</p></article>
+        <article class="card span-4"><h3>Temporal order</h3><p>The proposed cause must occur before the outcome. A later observation may be a consequence rather than a cause.</p></article>
+        <article class="card span-4"><h3>Mechanism</h3><p>Explain the connecting process: how could this condition change what happened? Naming an association is not enough.</p></article>
+        <article class="card span-4"><h3>Contrast</h3><p>Compare failed and successful cases, before and after, locations, shifts, versions or exposed and unexposed groups.</p></article>
+        <article class="card span-4"><h3>Rival explanations</h3><p>Write down alternatives and what evidence would distinguish them. Do not quietly discard inconvenient possibilities.</p></article>
+        <article class="card span-4"><h3>Counterfactual</h3><p>Ask whether the outcome would probably have changed if the factor were different, then state the assumptions behind that judgement.</p></article>
+        <article class="card span-4"><h3>Confidence</h3><p>Label conclusions as tentative, supported or strong. Confidence should reflect evidence quality, not the seniority of the speaker.</p></article>
+      </div>
+      <div class="warning"><strong>Two stopping errors:</strong> stopping at the first plausible cause produces shallow actions; drilling forever produces unusable analysis. Stop when the important causal claims are supported well enough to act, rival explanations have been considered, and effectiveness can be measured.</div>
+    </div></section>
+
+    <section id="process"><div class="shell">
+      <div class="section-head"><div class="section-no">03 / PROCESS</div><div><h2>The evidence-to-learning loop</h2><p class="lead">The deliverable is not a fishbone, timeline or signed report. It is a tested change that reduces recurrence, consequence, or time to detect and recover.</p></div></div>
+      <div class="cycle">
+        <article class="step"><h3>Contain and make safe</h3><p><strong>Output:</strong> the situation is stabilised, temporary controls are recorded and volatile evidence is preserved. Restoration and explanation remain separate jobs.</p></article>
+        <article class="step"><h3>Frame the problem</h3><p><strong>Output:</strong> a neutral statement of expected versus actual, where, when, scale, impact, trend and boundary—with no presumed cause embedded in it.</p></article>
+        <article class="step"><h3>Set scope and team</h3><p><strong>Output:</strong> a proportionate response, a clear investigation question and a team including people who know, do and experience the work.</p></article>
+        <article class="step"><h3>Build the factual record</h3><p><strong>Output:</strong> a timestamped event-and-conditions timeline that distinguishes observations, records, recollections, assumptions, contradictions and gaps.</p></article>
+        <article class="step"><h3>Map the work system</h3><p><strong>Output:</strong> people, tasks, tools, environment, policies, interfaces, dependencies, controls and feedback—plus differences between work-as-imagined and work-as-done.</p></article>
+        <article class="step"><h3>Generate hypotheses</h3><p><strong>Output:</strong> several testable explanations covering what changed, which barriers weakened, why detection lagged and what amplified or limited the effect.</p></article>
+        <article class="step"><h3>Test causal factors</h3><p><strong>Output:</strong> supported and rejected claims, rival explanations, evidence provenance and confidence. Triangulate sources; reproduce only where safe.</p></article>
+        <article class="step"><h3>Design actions</h3><p><strong>Output:</strong> changes connected to causal mechanisms. Prefer elimination, simplification, constraints and resilient design over reminders or retraining alone.</p></article>
+        <article class="step"><h3>Implement with ownership</h3><p><strong>Output:</strong> owner, due date, resources, measurable end state, risk check and review route for every action.</p></article>
+        <article class="step"><h3>Verify and share learning</h3><p><strong>Output:</strong> evidence of implementation and effectiveness after sufficient exposure, guardrail results, updated standards and a rule for reopening the analysis.</p></article>
+      </div>
+    </div></section>
+
+    <section id="worked-case" class="case-section"><div class="shell">
+      <div class="section-head"><div class="section-no">04 / WORKED CASE</div><div><h2>Follow one question from signal to verified action</h2><p class="lead">This fictional NHS-style teaching case shows the reasoning, not a claim about any real organisation or patient group. The figures are deliberately simple so the causal discipline remains visible.</p></div></div>
+      <div class="case-banner"><span class="label">Governing question</span><h3>Why did missed outpatient appointments rise after the booking-system change, which conditions materially contributed, and what should change without worsening access or staff workload?</h3><p>The question names the observed outcome, the suspected time boundary, the need to test more than one condition and the guardrails that prevent a narrow “fix”.</p></div>
+      <div class="case-facts">
+        <div><span class="mini-label">Before change</span><strong>8.1% missed</strong><p>810 of 10,000 scheduled appointments in the preceding comparison period.</p></div>
+        <div><span class="mini-label">After change</span><strong>12.7% missed</strong><p>1,270 of 10,000 scheduled appointments after the new booking process stabilised.</p></div>
+        <div><span class="mini-label">Impact</span><strong>+460 misses</strong><p>A real investigation would add care delay, unused capacity, cost, equity and patient-experience measures.</p></div>
+      </div>
+
+      <div class="grid">
+        <article class="card span-5"><span class="label">Neutral problem statement</span><h3>Expected versus actual</h3><p>Across the included outpatient clinics, the missed-appointment rate increased from 8.1% to 12.7% after the booking-system change. The investigation covers booking, reminders and rescheduling from referral to appointment date. It does not assume the software caused the increase.</p></article>
+        <article class="card span-7"><span class="label">Initial hypotheses</span><h3>What could explain the change?</h3><p><strong>H1:</strong> reminder delivery weakened during data migration. <strong>H2:</strong> appointment lead times increased. <strong>H3:</strong> patients had fewer workable ways to reschedule. <strong>H4:</strong> clinic or patient mix changed. <strong>H5:</strong> the apparent rise came from a definition or denominator change.</p><p>These are investigation routes, not findings.</p></article>
+      </div>
+
+      <h3 style="margin-top:42px">The evidence plan</h3>
+      <p class="scroll-hint">Scroll sideways to inspect the full evidence table →</p>
+      <div class="evidence-wrap"><table class="evidence-table">
+        <thead><tr><th>Evidence</th><th>Question it can answer</th><th>Limitation or safeguard</th></tr></thead>
+        <tbody>
+          <tr><td>Appointment-level event log</td><td>When was each appointment created, changed, reminded, cancelled or missed?</td><td>Audit field definitions and time zones before comparing periods.</td></tr>
+          <tr><td>Reminder delivery records</td><td>Were messages eligible, attempted, delivered or failed?</td><td>Delivery does not prove the message was read or understood.</td></tr>
+          <tr><td>Before/after and clinic contrasts</td><td>Where is the increase concentrated, and where did similar work still succeed?</td><td>Control for case mix, lead time, clinic and known seasonal effects.</td></tr>
+          <tr><td>Walkthroughs and staff interviews</td><td>How is booking and rescheduling actually performed?</td><td>Invite contradiction; do not treat recollection as a timestamped fact.</td></tr>
+          <tr><td>Patient and carer accounts</td><td>What made attendance or recovery from a problem difficult?</td><td>Use compassionate engagement and avoid blaming people for access constraints.</td></tr>
+          <tr><td>Call and digital-channel measures</td><td>Could patients reach the service and complete a change?</td><td>Include abandoned calls, failed journeys and channel exclusion—not only completions.</td></tr>
+        </tbody>
+      </table></div>
+
+      <p class="scroll-hint">Scroll sideways to follow the complete causal network →</p>
+      <div class="causal-map" aria-label="Horizontally scrollable causal network for the worked case">
+        <svg viewBox="0 0 1100 480" role="img" aria-labelledby="case-map-title case-map-desc">
+          <title id="case-map-title">Evidence-supported causal network for the fictional missed-appointment case</title>
+          <desc id="case-map-desc">The booking change contributes through failed contact migration, longer lead times and a weakened rescheduling route. These conditions reduce reminders and recovery opportunities, increasing missed appointments. Clinic mix and a denominator change are shown as weakened rival explanations.</desc>
+          <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#174f3f"/></marker><style>.n{fill:#fffdf7;stroke:#174f3f;stroke-width:3}.r{fill:#f6e2d9;stroke:#cf6046;stroke-width:3}.o{fill:#174f3f;stroke:#174f3f;stroke-width:3}.t{font:700 18px Georgia,serif;fill:#17201d}.s{font:15px Georgia,serif;fill:#5d6863}.w{font:700 20px Georgia,serif;fill:#fffdf7}.l{stroke:#174f3f;stroke-width:4;fill:none;marker-end:url(#arrow)}.d{stroke:#cf6046;stroke-width:3;stroke-dasharray:10 8;fill:none}</style></defs>
+          <path class="l" d="M240 95 C320 95 330 95 405 95"/><path class="l" d="M240 240 C320 240 330 210 405 210"/><path class="l" d="M240 385 C320 385 330 330 405 330"/>
+          <path class="l" d="M650 95 C730 95 735 170 810 210"/><path class="l" d="M650 210 C730 210 740 210 810 210"/><path class="l" d="M650 330 C730 330 745 260 810 225"/>
+          <rect class="n" x="35" y="45" width="205" height="100" rx="8"/><text class="t" x="55" y="77">Contact-data mapping</text><text class="s" x="55" y="104">valid numbers lose</text><text class="s" x="55" y="126">reminder eligibility</text>
+          <rect class="n" x="35" y="190" width="205" height="100" rx="8"/><text class="t" x="55" y="222">Longer lead time</text><text class="s" x="55" y="249">more time for plans,</text><text class="s" x="55" y="271">health and memory to change</text>
+          <rect class="n" x="35" y="335" width="205" height="100" rx="8"/><text class="t" x="55" y="367">Harder rescheduling</text><text class="s" x="55" y="394">link removed; call queue</text><text class="s" x="55" y="416">becomes the recovery route</text>
+          <rect class="n" x="405" y="45" width="245" height="100" rx="8"/><text class="t" x="425" y="77">Reminder barrier weakens</text><text class="s" x="425" y="104">fewer timely cues and</text><text class="s" x="425" y="126">fewer detected bad contacts</text>
+          <rect class="n" x="405" y="160" width="245" height="100" rx="8"/><text class="t" x="425" y="192">Attendance becomes harder</text><text class="s" x="425" y="219">commitment and circumstances</text><text class="s" x="425" y="241">change during the wait</text>
+          <rect class="n" x="405" y="280" width="245" height="100" rx="8"/><text class="t" x="425" y="312">Recovery barrier weakens</text><text class="s" x="425" y="339">people cannot easily release</text><text class="s" x="425" y="361">or rearrange the slot</text>
+          <rect class="o" x="810" y="160" width="245" height="125" rx="8"/><text class="w" x="835" y="202">Missed appointments rise</text><text class="w" x="835" y="232">from 8.1% to 12.7%</text><text class="s" style="fill:#c9e2d5" x="835" y="260">multiple contributing paths</text>
+          <rect class="r" x="405" y="410" width="650" height="55" rx="6"/><text class="t" x="425" y="434">Rival explanations checked</text><text class="s" x="425" y="456">Measurement definition unchanged; clinic mix broadly stable—insufficient to explain the rise.</text>
+        </svg>
+      </div>
+
+      <div class="case-findings">
+        <article class="finding"><h3>Reminder eligibility was damaged during migration</h3><p>The rise was concentrated where reminders were not successfully attempted. Mapping checks showed that some valid contact records no longer met the new eligibility rule. Send logs supplied the mechanism and timing.</p><span class="confidence">Strong support</span></article>
+        <article class="finding"><h3>Long lead time amplified the effect</h3><p>Appointments booked more than six weeks ahead had higher missed rates before and after the change; their share increased after implementation. This is a contributing condition, not evidence that waiting alone caused every miss.</p><span class="confidence">Supported</span></article>
+        <article class="finding"><h3>The recovery route weakened</h3><p>The self-service reschedule route disappeared and abandoned calls increased. Walkthroughs and patient accounts showed that some people tried but could not release or move the appointment.</p><span class="confidence">Supported</span></article>
+        <article class="finding"><h3>Two attractive rivals became less likely</h3><p>The operational definition and denominator were unchanged, and the clinic mix was broadly stable. That weakens measurement and mix explanations, but the report should state residual uncertainty rather than declare them impossible.</p><span class="confidence">Rivals weakened</span></article>
+      </div>
+
+      <div class="action-plan">
+        <div><span class="label">Action package</span><h3>Change the mechanisms</h3><ul><li>Repair contact-data mapping and validate reminder eligibility during migration.</li><li>Create a visible failed-reminder queue with ownership and recovery rules.</li><li>Restore an accessible rescheduling route across digital and telephone channels.</li><li>Reduce excessive lead time where capacity and clinical priority allow.</li><li>Test changes with patients and booking staff before full rollout.</li></ul></div>
+        <div><span class="label">Verification plan</span><h3>Prove more than implementation</h3><ul><li><strong>Primary:</strong> missed-appointment rate by clinic and patient group.</li><li><strong>Process:</strong> reminder eligibility, delivery and reschedule completion.</li><li><strong>Guardrails:</strong> waiting time, abandoned calls, staff workload and access inequalities.</li><li><strong>Exposure:</strong> review after eight weeks and enough appointments for a stable comparison.</li><li><strong>Reopen:</strong> investigate again if the total improves but a subgroup worsens.</li></ul></div>
+      </div>
+      <div class="annotation"><strong>Why this is RCA rather than storytelling:</strong> the analysis began with several hypotheses, used contrasts and mechanisms, retained uncertainty, linked actions to supported causal paths and defined what evidence would show that the response worked.</div>
+    </div></section>
+
+    <section id="choose"><div class="shell">
+      <div class="section-head"><div class="section-no">05 / CHOOSE</div><div><h2>Use the lightest method that can answer the question</h2><p class="lead">A method is a lens. Select it for the structure of the problem and the evidence available—not because the organisation has always used it.</p></div></div>
+      <div class="decision"><h3>Three questions before choosing</h3><p><strong>Has the event already happened?</strong> If not, use prospective risk analysis. <strong>Is the path simple or interactive?</strong> A short chain needs less machinery than a complex service. <strong>Do you have one event or repeated process data?</strong> A timeline explains sequence; process mining examines many recorded journeys.</p></div>
+      <div class="method-ladder">
+        <article class="method-row"><div><span class="mini-label">Clear sequence</span><h3>Timeline + 5 Whys</h3></div><p><span class="mini-label">Answers</span>What happened in what order, and what conditions connect each step?</p><p><span class="mini-label">Switch when</span>The chain branches, evidence conflicts, or “why” repeatedly ends at a person.</p></article>
+        <article class="method-row"><div><span class="mini-label">Broad contributors</span><h3>Fishbone + evidence matrix</h3></div><p><span class="mini-label">Answers</span>What categories of explanation should be tested?</p><p><span class="mini-label">Switch when</span>Interactions or controls matter more than a category list.</p></article>
+        <article class="method-row"><div><span class="mini-label">Known boundary</span><h3>Change analysis</h3></div><p><span class="mini-label">Answers</span>What differs between before and after, failed and successful, site, shift or version?</p><p><span class="mini-label">Switch when</span>Many changes occurred together and causal separation is weak.</p></article>
+        <article class="method-row"><div><span class="mini-label">Controls expected</span><h3>Barrier / bow-tie analysis</h3></div><p><span class="mini-label">Answers</span>Which preventive, detective, mitigating or recovery controls were absent, weak or bypassed?</p><p><span class="mini-label">Switch when</span>The control structure spans several organisational levels.</p></article>
+        <article class="method-row"><div><span class="mini-label">Work-system interaction</span><h3>SEIPS</h3></div><p><span class="mini-label">Answers</span>How did people, tasks, tools, organisation and environment interact to shape work and outcomes?</p><p><span class="mini-label">Switch when</span>A simple SEIPS scan becomes disconnected “buckets” rather than an interaction analysis.</p></article>
+        <article class="method-row"><div><span class="mini-label">Functions vary</span><h3>FRAM</h3></div><p><span class="mini-label">Answers</span>How did ordinary variability in connected functions combine to produce an unusual outcome?</p><p><span class="mini-label">Switch when</span>The main issue is governance, authority or feedback across levels.</p></article>
+        <article class="method-row"><div><span class="mini-label">System levels and control</span><h3>AcciMap or CAST</h3></div><p><span class="mini-label">Answers</span>How did decisions, constraints, communication and feedback across the system permit the loss?</p><p><span class="mini-label">Use with care</span>These methods need skilled facilitation and a clearly defined system boundary.</p></article>
+        <article class="method-row"><div><span class="mini-label">Many event logs</span><h3>Process mining</h3></div><p><span class="mini-label">Answers</span>What paths actually occur, where do they diverge and which variants are associated with delay or failure?</p><p><span class="mini-label">Limit</span>A discovered pattern still needs domain interpretation and causal testing.</p></article>
+      </div>
+    </div></section>
+
+    <section id="toolkit"><div class="shell">
+      <div class="section-head"><div class="section-no">06 / CORE TOOLKIT</div><div><h2>What the common techniques actually produce</h2><p class="lead">Each technique below is useful only when its output changes the next investigative decision.</p></div></div>
+      <div class="tool-grid">
+        <article class="tool-card"><span class="label">Reconstruct</span><h3>Timeline</h3><p>Combine events and surrounding conditions from several sources using one clock and explicit provenance.</p><dl><dt>Output</dt><dd>A sequence showing detection, decisions, hand-offs, controls and recovery—not merely a list of timestamps.</dd><dt>Mini example</dt><dd>The booking release went live at 18:00; contact eligibility fell at the next migration job; reminder failures appeared two days later.</dd><dt>Main trap</dt><dd>Filling gaps with a neat narrative. Mark unknowns and contradictions instead.</dd></dl></article>
+        <article class="tool-card"><span class="label">Drill down</span><h3>5 Whys</h3><p>Move from an observed effect toward actionable system conditions by asking what made each step possible.</p><dl><dt>Output</dt><dd>One or more evidence-linked chains. Branch whenever several conditions are necessary.</dd><dt>Mini example</dt><dd>Reminder not sent → record ineligible → contact flag not mapped → migration test omitted that field.</dd><dt>Main trap</dt><dd>Stopping at “staff did not check”. Ask what made checking difficult and what control should have detected the problem.</dd></dl></article>
+        <article class="tool-card"><span class="label">Generate then test</span><h3>Fishbone and evidence matrix</h3><p>Use domain-appropriate headings to generate hypotheses, then record the evidence for, against and still needed for each one.</p><dl><dt>Output</dt><dd>A prioritised testing plan—not a diagram presented as proof.</dd><dt>Mini example</dt><dd>People, booking process, technology, access, measurement and environment produce hypotheses about missed appointments.</dd><dt>Main trap</dt><dd>Counting brainstormed ideas as causes or using generic categories that hide interactions.</dd></dl></article>
+        <article class="tool-card"><span class="label">Compare</span><h3>Change analysis</h3><p>List what differs between a reference that worked and the case that failed.</p><dl><dt>Output</dt><dd>Differences ranked by timing, mechanism and exposure.</dd><dt>Mini example</dt><dd>The definition stayed stable, but contact mapping, lead-time distribution and rescheduling routes changed.</dd><dt>Main trap</dt><dd>Assuming every coincident change is causal. Test which difference can produce the observed pattern.</dd></dl></article>
+        <article class="tool-card"><span class="label">Study controls</span><h3>Barrier analysis</h3><p>Examine controls intended to prevent the event, detect it, limit its consequences or enable recovery.</p><dl><dt>Output</dt><dd>A barrier table showing intended function, actual performance, evidence and reason for weakness.</dd><dt>Mini example</dt><dd>Reminder validation should detect bad contacts; the failed-message queue should enable recovery; neither worked reliably.</dd><dt>Main trap</dt><dd>Listing “training” as a barrier without checking whether the workflow makes the desired action possible.</dd></dl></article>
+        <article class="tool-card"><span class="label">Prioritise</span><h3>Pareto and stratification</h3><p>Rank categories by frequency, harm or cost, then split the data by meaningful groups, time and process stage.</p><dl><dt>Output</dt><dd>A focused area for investigation and a warning about who may be hidden by the total.</dd><dt>Mini example</dt><dd>Most additional misses occur in two clinics and among appointments without successful reminders.</dd><dt>Main trap</dt><dd>Frequency is not causality. A small category may also carry the greatest harm.</dd></dl></article>
+      </div>
+    </div></section>
+
+    <section id="actions"><div class="shell">
+      <div class="section-head"><div class="section-no">07 / ACTION</div><div><h2>An analysis is only as strong as its corrective action</h2><p class="lead">RCA²—root cause analysis and action—captures the essential point: learning must become sustainable system change.</p></div></div>
+      <div class="strength">
+        <div class="weak"><span class="label">Weak</span><h3>Depends on memory</h3><p>Warnings, policies, reminders, extra checks and retraining. Sometimes necessary; rarely sufficient alone.</p></div>
+        <div class="mid"><span class="label">Intermediate</span><h3>Makes success easier</h3><p>Standardisation, simplification, workflow-integrated checklists, better hand-offs, redundancy and decision support.</p></div>
+        <div class="strong"><span class="label">Strong</span><h3>Changes the system</h3><p>Elimination, substitution, physical or software constraints, forcing functions, monitored automation, fail-safe design and engineered resilience.</p></div>
+      </div>
+      <div class="warning"><strong>Strong is not automatically safe.</strong> Automation can create hidden dependence; constraints can block legitimate exceptions. Test actions with the people affected, retain recovery paths and monitor displaced risk.</div>
+      <p class="scroll-hint">Scroll sideways to inspect the full action-quality table →</p>
+      <div class="evidence-wrap"><table class="evidence-table">
+        <thead><tr><th>Action test</th><th>Question</th><th>Evidence of completion</th></tr></thead>
+        <tbody>
+          <tr><td>Specific</td><td>What exactly changes, where and for whom?</td><td>The changed design, control, workflow or standard is visible.</td></tr>
+          <tr><td>Causal</td><td>Which supported factor or weak control does it address?</td><td>The mechanism is linked explicitly in the investigation record.</td></tr>
+          <tr><td>Owned</td><td>Who can deliver and sustain it?</td><td>A named accountable owner, resources and due date.</td></tr>
+          <tr><td>Measurable</td><td>How will we know it was implemented and worked?</td><td>Process and outcome measures, exposure period and review date.</td></tr>
+          <tr><td>Balanced</td><td>What new risk, friction or inequity could it introduce?</td><td>Guardrail measures and feedback from affected people.</td></tr>
+          <tr><td>Revisable</td><td>What result would make us reopen the analysis?</td><td>A clear threshold, owner and route back into investigation.</td></tr>
+        </tbody>
+      </table></div>
+    </div></section>
+
+    <section id="beyond" class="modern"><div class="shell">
+      <div class="section-head"><div class="section-no">08 / BEYOND A SINGLE ROOT</div><div><h2>RCA is a starting family, not the final frame</h2><p class="lead">Modern practice widens the investigation when linear chains cannot represent interactions, adaptation, governance, repeated process variation or uncertainty about intervention effects.</p></div></div>
+      <div class="systems-grid">
+        <article class="system-card"><span class="label">Work system</span><h3>SEIPS</h3><p>Examines how people, tasks, tools and technology, organisation, internal environment and external environment interact to shape processes and outcomes.</p><p><strong>Use when:</strong> healthcare or service work depends on several interacting conditions. <strong>Do not:</strong> sort facts into isolated categories and call that systems analysis; the value lies in the relationships.</p></article>
+        <article class="system-card"><span class="label">Across levels</span><h3>AcciMap</h3><p>Places evidence across levels such as frontline work, management, organisation, regulators and wider policy, then examines how decisions and pressures connect vertically.</p><p><strong>Use when:</strong> local action is shaped by governance, contracts, regulation or resource decisions. <strong>Output:</strong> a multi-level influence map, not one root.</p></article>
+        <article class="system-card"><span class="label">Everyday variability</span><h3>FRAM</h3><p>Models the functions required for work and how their inputs, outputs, preconditions, resources, controls and timing vary and combine.</p><p><strong>Use when:</strong> the same process usually succeeds through adaptation, but ordinary variation can occasionally resonate into failure. <strong>Needs:</strong> close study of work-as-done.</p></article>
+        <article class="system-card"><span class="label">Control and feedback</span><h3>CAST</h3><p>Examines why the safety-control structure did not prevent the loss: responsibilities, constraints, feedback, coordination and decisions at each level.</p><p><strong>Use when:</strong> safety-critical technology, software and management controls interact. <strong>Needs:</strong> a defined loss, hazards, system boundary and skilled facilitation.</p></article>
+        <article class="system-card"><span class="label">Repeated pathways</span><h3>Process mining</h3><p>Uses timestamped event data from many cases to discover actual paths, check conformance and compare successful and problematic variants.</p><p><strong>Use when:</strong> the question concerns a recurring process rather than one incident. <strong>Limit:</strong> event logs show recorded behaviour; they do not supply meaning or causality by themselves.</p></article>
+        <article class="system-card"><span class="label">Intervention effects</span><h3>Causal inference</h3><p>Uses explicit assumptions, comparison designs and causal models to estimate whether a factor or intervention changes an outcome beyond ordinary association.</p><p><strong>Use when:</strong> deciding whether a candidate driver or action has an effect. <strong>Limit:</strong> missing confounders, changing systems and weak measurement can make a precise estimate wrong.</p></article>
+        <article class="system-card"><span class="label">Future loss</span><h3>FMEA, bow-tie and STPA</h3><p>These methods ask how a future process or design could fail. FMEA examines failure modes; bow-tie organises threats and barriers; STPA examines unsafe control actions.</p><p><strong>Use when:</strong> preventing failure before deployment. They complement learning from incidents but are not retrospective RCA.</p></article>
+        <article class="system-card"><span class="label">Human-supervised</span><h3>AI-assisted investigation</h3><p>Models can summarise records, cluster incidents, identify anomalies and propose hypotheses. Their proper role is reducing the search space.</p><p><strong>Safeguard:</strong> retain provenance, uncertainty and human responsibility. No automated method wins across every system, and fluent output can amplify a false story.</p></article>
+      </div>
+      <div class="pathway"><h3>A practical learning progression</h3><p>Build capability in layers. Later methods do not invalidate earlier ones; they answer questions the simpler lens cannot hold.</p><ol><li><strong>Measure the process</strong>Definitions, denominators, variation and data quality.</li><li><strong>Reconstruct events</strong>Timeline, change and barrier analysis.</li><li><strong>Map the work system</strong>SEIPS and work-as-done.</li><li><strong>Test effects</strong>Comparison, causal assumptions and experiments.</li><li><strong>Analyse pathways</strong>Process mining and recurring variants.</li><li><strong>Model complexity</strong>FRAM, AcciMap or CAST when justified.</li></ol></div>
+      <div class="warning"><strong>Framework fluency is not investigation competence.</strong> A polished diagram cannot replace careful interviewing, reliable records, domain knowledge, causal testing, stakeholder involvement and constructive review by experienced investigators.</div>
+    </div></section>
+
+    <section id="canvas"><div class="shell">
+      <div class="section-head"><div class="section-no">09 / PRACTICE</div><div><h2>A reusable investigation canvas and quality gate</h2><p class="lead">Use the canvas to brief the work. Use the quality gate before declaring the investigation complete.</p></div></div>
+      <div class="canvas"><ol>
+        <li><div><strong>Problem statement:</strong> expected, actual, where, when, scale, trend and impact.</div></li>
+        <li><div><strong>Immediate response:</strong> containment, recovery, temporary controls and evidence preserved.</div></li>
+        <li><div><strong>Scope:</strong> governing question, boundary, exclusions, team, stakeholders and response level.</div></li>
+        <li><div><strong>Factual record:</strong> timeline, sources, contradictions, unknowns and work-as-done.</div></li>
+        <li><div><strong>Hypotheses:</strong> proposed mechanisms, failed or absent controls and evidence required.</div></li>
+        <li><div><strong>Causal claims:</strong> evidence for and against, rival explanations, assumptions and confidence.</div></li>
+        <li><div><strong>Learning:</strong> what worked, what limited harm and which patterns recur across cases.</div></li>
+        <li><div><strong>Actions:</strong> causal link, strength, owner, resources, due date and implementation measure.</div></li>
+        <li><div><strong>Effectiveness:</strong> outcome measure, guardrails, exposure period, review date and reviewer.</div></li>
+        <li><div><strong>Reopen rule:</strong> the result or unintended effect that sends the team back into investigation.</div></li>
+      </ol></div>
+      <div class="check-grid">
+        <div><span class="label">Evidence quality</span><h3>Can the claims survive challenge?</h3><ul><li>Facts are separated from inference.</li><li>Important claims use more than one source where possible.</li><li>Successful and failed cases are compared.</li><li>Rival explanations are recorded.</li><li>Confidence and remaining uncertainty are visible.</li></ul></div>
+        <div><span class="label">Action quality</span><h3>Can reality disprove the response?</h3><ul><li>Every action targets a supported mechanism.</li><li>Implementation and effectiveness are measured separately.</li><li>Affected people helped test the action.</li><li>Guardrails expose displaced harm or inequity.</li><li>The review can reopen the analysis.</li></ul></div>
+      </div>
+      <div class="quote">The investigation is finished only when the action has been tested against reality.<small>Not when the report is signed</small></div>
+    </div></section>
+
+    <section id="sources"><div class="shell">
+      <div class="section-head"><div class="section-no">10 / SOURCES</div><div><h2>Research base and further learning</h2><p class="lead">The sources span healthcare, safety engineering, automotive quality and digital operations. The worked case is fictional; the methodological claims are grounded in the guidance and research below. Accessed 16 July 2026.</p></div></div>
+      <ol class="sources">
+        <li><a href="https://www.england.nhs.uk/long-read/patient-safety-incident-response-framework/">NHS England — Patient Safety Incident Response Framework</a>. Proportionate, compassionate and system-based learning from patient safety incidents.</li>
+        <li><a href="https://www.england.nhs.uk/publication/patient-safety-learning-response-toolkit/">NHS England — Patient safety learning response toolkit</a>. SEIPS, evidence gathering, everyday-work exploration, synthesis and safety-action guidance.</li>
+        <li><a href="https://www.hssib.org.uk/patient-safety-investigations/investigating-under-the-patient-safety-incident-response-framework-psirf-sharing-hssib-learning-for-future-development/investigation-report/">HSSIB — Investigating under PSIRF</a>. Evidence that systems methods require skilled application and should not become superficial categorisation.</li>
+        <li><a href="https://www.hssib.org.uk/news-events-blog/the-investigators-toolkit-fram/">HSSIB — The investigator’s toolkit: FRAM</a>. Plain-language explanation of functions, dependencies and variability.</li>
+        <li><a href="https://www.hssib.org.uk/patient-safety-investigations/weight-based-medication-errors-in-children/investigation-report/">HSSIB — Weight-based medication errors in children</a>. A real investigation combining SEIPS, FRAM, observations, interviews and verification of findings.</li>
+        <li><a href="https://psnet.ahrq.gov/issue/rca2-improving-root-cause-analyses-and-actions-prevent-harm">National Patient Safety Foundation / AHRQ PSNet — RCA²</a>. Emphasises sustainable corrective actions rather than analysis alone.</li>
+        <li><a href="https://sre.google/sre-book/postmortem-culture/">Google SRE — Postmortem culture: learning from failure</a>. Open, evidence-led postmortems and preventive action.</li>
+        <li><a href="https://psas.scripts.mit.edu/home/books-and-handbooks/">MIT Partnership for Systems Approaches to Safety and Security — STPA and CAST handbooks</a>. Definitive systems-theoretic guidance for prospective hazard analysis and retrospective accident learning.</li>
+        <li><a href="https://www.iatfglobaloversight.org/iatf-169492016/iatf-169492016-sis/">International Automotive Task Force — IATF 16949 sanctioned interpretations</a>. Structured problem solving, containment, RCA, systemic corrective action, effectiveness verification and updating process controls.</li>
+        <li><a href="https://www.iso.org/standard/72140.html">ISO 31010:2019 — Risk management: risk assessment techniques</a>. International reference covering causal, consequence and prospective risk techniques.</li>
+        <li><a href="https://arxiv.org/abs/2408.00803">Wang &amp; Qi (2024) — Comprehensive survey on RCA in microservices</a>. Metrics, traces, logs and multimodal automated approaches.</li>
+        <li><a href="https://arxiv.org/abs/2408.13729">Pham, Ha &amp; Zhang (2024) — Causal inference RCA: how far are we?</a>. Comparative evaluation showing material limitations and no universal winner.</li>
+        <li><a href="https://doi.org/10.1145/3691620.3695475">Han et al. (ASE 2024) — LLM and classifier collaboration for failure RCA</a>. Emerging AI-assisted investigation under limited labels.</li>
+      </ol>
+      <p><strong>Interpretive note.</strong> “State of the art” varies by domain. Systems methods are established in safety-critical work; process mining, observability and causal or AI-assisted automation depend heavily on data quality and system context. No framework removes the need for judgement, evidence and verification.</p>
+    </div></section>
+  </main>
+
+  <footer><div class="shell footer-grid">
+    <div><span class="label">Analytical Field Guide</span><p>Root Cause Analysis · designed for screen, print and facilitated learning.</p><p>This independent companion guide supports learning alongside Code Institute study. It is not official Code Institute material.</p></div>
+    <a class="tidyweb-mark" href="https://github.com/TidyWeb/" target="_blank" rel="noopener"><img src="assets/tidyweb_logo.png" alt="TidyWeb logo"><span>© 2026 TidyWeb<br>GitHub</span></a>
+  </div></footer>
+  <button class="top" aria-label="Back to top" title="Back to top">↑</button>
+  <script>
+    const topButton=document.querySelector('.top');
+    addEventListener('scroll',()=>topButton.style.display=scrollY>700?'block':'none',{passive:true});
+    topButton.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+  </script>
+</body>
+</html>
